@@ -1,5 +1,5 @@
 # Site settings
-baseURL = "https://viktor-nave1.netlify.app"
+baseURL = "https://viktor-nave1.netlify.app/"
 languageCode = "en-us"
 title = "Portfolio Website for Viktor Nave"
 theme = "forty"
