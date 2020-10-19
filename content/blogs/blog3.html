@@ -1,0 +1,74 @@
+---
+categories:
+- ""
+- ""
+date: "2017-10-31T22:26:13-05:00"
+description: "" 
+draft: false
+image: SB1.jpg
+keywords: ""
+slug: blog4
+title: Spielberg vs Burton; an IMDB Rating Comparison
+---
+
+
+
+<div id="imdb-ratings-differences-between-directors" class="section level1">
+<h1>IMDB ratings: Differences between directors</h1>
+<p>We will run a hpothesis test. Using both the <code>t.test</code> command and the <code>infer</code> package to simulate from a null distribution, where you assume zero difference between the two.</p>
+<p>Here we load the data and examine the structure</p>
+<pre class="r"><code>library(readr)
+movies &lt;- read_csv(&quot;C:/Users/viktor/Desktop/Sep 2020-Mid 2021/LBS/Data Analytics for Finance/session6-workshop3/data/movies.csv&quot;)
+View(movies)</code></pre>
+<pre class="r"><code>table &lt;- movies %&gt;% 
+  
+#Filtering data for missing values &amp; choosing the two previously named directors
+  filter(!is.na(rating), director == &#39;Steven Spielberg&#39; | director == &#39;Tim Burton&#39;) %&gt;%
+  group_by(director) %&gt;% 
+  
+#Required statistic calculation
+  summarise(mean_1= mean(rating), mean = round(mean_1, digits = 2), sd= sd(rating), t_critical=qt(.95, n() - 1), standard_error=sd(movies$rating)/sqrt(n()), lower_95_1 = mean - t_critical*(standard_error), upper_95_1 = mean + t_critical*(standard_error), lower_95= round(lower_95_1, digits = 2),upper_95= round(upper_95_1, digits = 2) )
+
+table</code></pre>
+<pre><code>## # A tibble: 2 x 10
+##   director mean_1  mean    sd t_critical standard_error lower_95_1 upper_95_1
+##   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;          &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+## 1 Steven ~   7.57  7.57 0.695       1.72          0.219       7.19       7.95
+## 2 Tim Bur~   6.93  6.93 0.749       1.75          0.263       6.47       7.39
+## # ... with 2 more variables: lower_95 &lt;dbl&gt;, upper_95 &lt;dbl&gt;</code></pre>
+<pre class="r"><code>CI_lower &lt;- table %&gt;% 
+  filter(director == &#39;Steven Spielberg&#39;) %&gt;% 
+  select(lower_95)
+
+CI_higher &lt;- table %&gt;% 
+  filter(director == &#39;Tim Burton&#39;) %&gt;% 
+  select(upper_95)
+
+#plotting
+movies_plot &lt;- table %&gt;% 
+
+#plotting relevant variables
+  ggplot(aes(x = mean, y = reorder(director, mean), color = director, xmin = lower_95, xmax = upper_95)) +
+  geom_errorbar(aes(xmin=lower_95, xmax=upper_95, color=director), width=0.1, size=1.5, scales = &quot;free&quot;) +
+  geom_point(aes(x = mean, y = director, color = director, size = 1.7))+
+
+#Let&#39;s shade the common CI of the two directors.
+  geom_rect(aes(xmin = CI_lower$lower_95, xmax = CI_higher$upper_95, ymin= -Inf, ymax=Inf), alpha=0.2, colour = &quot;transparent&quot;)+
+  
+#Graph presentation
+  geom_text(aes(label=mean), color= &quot;grey&quot;, size=7, vjust=-0.7)+
+  geom_text(aes(label=upper_95), color= &quot;grey&quot;, size=4, vjust=-2, hjust=-7)+
+  geom_text(aes(label=lower_95), color= &quot;grey&quot;, size=4, vjust=-2, hjust=7)+
+  theme_minimal()+
+  labs(title= &quot;Burton &amp; Spielberg, do they have the same mean IMDB rating?&quot;,
+               subtitle = &quot;Overlap display of 95% CI&quot;,
+               x=&quot;IMDB Mean Rating&quot;,
+               y=&quot;&quot;)+
+  theme(plot.title = element_text(family = &quot;Arial&quot;, face = &quot;bold&quot;, size = (11)),
+          axis.title = element_text(family = &quot;Arial&quot;, size = (9)),
+          axis.text = element_text(family = &quot;Arial&quot;, size = (9)))
+
+movies_plot + theme(legend.position=&quot;none&quot;)</code></pre>
+<p><img src="/blogs/blog3_files/figure-html/unnamed-chunk-1-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p>As the graph above shows, we see a statistical overlap in the confidence intervals between the mean ratings for Spielberg and Burton.</p>
+</div>

@@ -1,0 +1,85 @@
+---
+categories:
+- ""
+- ""
+date: "2017-10-31T21:28:43-05:00"
+description: ""
+draft: false
+image: beer-wine.jpg
+keywords: ""
+slug: blog1
+title: Alcohol consumption and production, an  international comparison
+---
+
+
+
+<p>Ignore this first chunk of code</p>
+<pre class="r"><code>knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size=&quot;small&quot;)   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = &quot;center&quot;
+)</code></pre>
+<div id="drinks" class="section level1">
+<h1>Drinks</h1>
+<div id="where-do-people-drink-the-most-beer-wine-and-spirits" class="section level2">
+<h2>Where Do People Drink The Most Beer, Wine And Spirits?</h2>
+<pre class="r"><code>library(fivethirtyeight)
+data(drinks)</code></pre>
+<p>See below a clear representation of the variable types and further details to our relevant data</p>
+<pre class="r"><code>glimpse(drinks)</code></pre>
+<pre><code>## Rows: 193
+## Columns: 5
+## $ country                      &lt;chr&gt; &quot;Afghanistan&quot;, &quot;Albania&quot;, &quot;Algeria&quot;, &quot;...
+## $ beer_servings                &lt;int&gt; 0, 89, 25, 245, 217, 102, 193, 21, 261...
+## $ spirit_servings              &lt;int&gt; 0, 132, 0, 138, 57, 128, 25, 179, 72, ...
+## $ wine_servings                &lt;int&gt; 0, 54, 14, 312, 45, 45, 221, 11, 212, ...
+## $ total_litres_of_pure_alcohol &lt;dbl&gt; 0.0, 4.9, 0.7, 12.4, 5.9, 4.9, 8.3, 3....</code></pre>
+<p>The code below will show us a plot of the top 25 beer consuming countries</p>
+<pre class="r"><code>beer &lt;- drinks %&gt;% 
+  select(country, beer_servings) %&gt;% 
+  arrange(desc(beer_servings))
+
+top25_beer &lt;- beer %&gt;% 
+  head(25)
+
+ggplot(top25_beer, aes(x= beer_servings,
+       y = reorder(country, beer_servings))) +
+  geom_bar(stat=&#39;identity&#39;)+ labs(x=&quot;Beer Servings Consumed Per Person&quot;,y = &quot;Country&quot;, title = &quot;Top 25 Beer Consuming Countries&quot;)</code></pre>
+<p><img src="/blogs/blog1_files/figure-html/beer_plot-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p>The code below runs &amp; presents the top 25 wine consuming countries (no suprise, the French REALLY like their wine)</p>
+<pre class="r"><code>wine &lt;- drinks %&gt;% 
+  select(country, wine_servings) %&gt;% 
+  arrange(desc(wine_servings))
+
+top25_wine &lt;- wine %&gt;% 
+  head(25)
+
+ggplot(top25_wine, aes(x= wine_servings,
+       y = reorder(country, wine_servings))) +
+  geom_bar(stat=&#39;identity&#39;)+ labs(x=&quot;Wine Servings Consumed Per Person&quot;,y = &quot;Country&quot;, title = &quot;Top 25 Wine Consuming Countries&quot;)</code></pre>
+<p><img src="/blogs/blog1_files/figure-html/wine_plot-1.png" width="648" style="display: block; margin: auto;" />
+Lastly, lets run the code below to see the top 25 spirit consuming countries</p>
+<pre class="r"><code># YOUR CODE GOES HERE
+
+spirit &lt;- drinks %&gt;% 
+  select(country, spirit_servings) %&gt;% 
+  arrange(desc(spirit_servings))
+
+top25_spirit &lt;- spirit %&gt;% 
+  head(25)
+
+ggplot(top25_spirit, aes(x= spirit_servings,
+       y = reorder(country, spirit_servings))) +
+  geom_bar(stat=&#39;identity&#39;)+ labs(x=&quot;Spirits Servings Consumed Per Person&quot;,y = &quot;Country&quot;, title = &quot;Top 25 Spirits Consuming Countries&quot;)</code></pre>
+<p><img src="/blogs/blog1_files/figure-html/spirit_plot-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p>In conclusion, we see that alcohol is generally loved all over the world. Some countries have different tendencies towards different types, but after a long day of work everyone loves a nice drink. Cheers!</p>
+</div>
+</div>

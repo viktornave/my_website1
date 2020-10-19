@@ -1,0 +1,111 @@
+---
+categories:
+- ""
+- ""
+date: "2017-10-31T21:28:43-05:00"
+description: ""
+draft: false
+image: beer-wine.jpg
+keywords: ""
+slug: blog1
+title: Alcohol consumption and production, an  international comparison
+---
+Ignore this first chunk of code
+
+```{r, setup}
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+```
+
+```{r load-libraries, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(lubridate)
+library(fivethirtyeight)
+library(here)
+library(skimr)
+library(janitor)
+library(vroom)
+library(tidyquant)
+library(kableExtra)
+library(ggrepel)
+library(yaml)
+```
+# Drinks
+## Where Do People Drink The Most Beer, Wine And Spirits?
+
+```{r, load_alcohol_data}
+library(fivethirtyeight)
+data(drinks)
+
+```
+
+See below a clear representation of the variable types and further details to our relevant data  
+
+```{r glimpse_skim_data}
+glimpse(drinks)
+
+```
+The code below will show us a plot of the top 25 beer consuming countries
+
+```{r beer_plot}
+
+beer <- drinks %>% 
+  select(country, beer_servings) %>% 
+  arrange(desc(beer_servings))
+
+top25_beer <- beer %>% 
+  head(25)
+
+ggplot(top25_beer, aes(x= beer_servings,
+       y = reorder(country, beer_servings))) +
+  geom_bar(stat='identity')+ labs(x="Beer Servings Consumed Per Person",y = "Country", title = "Top 25 Beer Consuming Countries")
+
+```
+
+The code below runs & presents the top 25 wine consuming countries (no suprise, the French REALLY like their wine)
+
+```{r wine_plot}
+
+wine <- drinks %>% 
+  select(country, wine_servings) %>% 
+  arrange(desc(wine_servings))
+
+top25_wine <- wine %>% 
+  head(25)
+
+ggplot(top25_wine, aes(x= wine_servings,
+       y = reorder(country, wine_servings))) +
+  geom_bar(stat='identity')+ labs(x="Wine Servings Consumed Per Person",y = "Country", title = "Top 25 Wine Consuming Countries")
+
+```
+Lastly, lets run the code below to see the top 25 spirit consuming countries
+```{r spirit_plot}
+# YOUR CODE GOES HERE
+
+spirit <- drinks %>% 
+  select(country, spirit_servings) %>% 
+  arrange(desc(spirit_servings))
+
+top25_spirit <- spirit %>% 
+  head(25)
+
+ggplot(top25_spirit, aes(x= spirit_servings,
+       y = reorder(country, spirit_servings))) +
+  geom_bar(stat='identity')+ labs(x="Spirits Servings Consumed Per Person",y = "Country", title = "Top 25 Spirits Consuming Countries")
+
+```
+
+In conclusion, we see that alcohol is generally loved all over the world. Some countries have different tendencies towards different types, but after a long day of work everyone loves a nice drink. Cheers!
