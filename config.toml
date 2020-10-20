@@ -20,7 +20,7 @@ disqusShortname = ""
 
   # Provide your metadata here.
   name = "Viktor Nave"
-  description = "Born to two German parents in Hamburg 24th September 1996. Grew up most of my life in Switzerland, went to boarding school in the UK, Bachelors in Milan, now loiving in London "
+  description = "Born to two German parents in Hamburg on 24th September 1996. Grew up most of my life in Switzerland, went to boarding school in the UK, Bachelors in Milan, now loiving in London "
 
   # Link custom assets relative to /static
   custom_css = []
